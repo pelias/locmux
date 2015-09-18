@@ -11,6 +11,7 @@
 var request = require('request');
 var colors = require('text-hex');
 var async = require('async');
+var extend = require('extend');
 
 var locations = [
   {
@@ -44,9 +45,10 @@ async.forEach(locations, function (loc, cb) {
       }
 
       results.features.forEach(function (feature) {
-        feature.properties['marker-color'] = colors(loc.name);
-        feature.properties.query = loc.name;
+        var extended = { 'marker-color': colors(loc.name), query: loc.name };
+        extend(extended, feature.properties);
 
+        feature.properties = extended;
         geojson.features.push(feature);
 
         if (!geojsonio) {
